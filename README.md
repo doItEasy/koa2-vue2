@@ -1,6 +1,6 @@
 # koa2-vue2
 
-> A Vue.js project
+> koa2 & vue2 project
 
 ## Build Setup
 
@@ -28,7 +28,7 @@ npm run start
 
 ```
 
-
+``` bash
 ├── README.md
 ├── app.js      //Koa入口文件
 ├── build       //vue-cli生成，用于webpack监听、构建
@@ -69,6 +69,7 @@ npm run start
 └── test
     └── unit
 
+```
 
 
 For detailed explanation on how things work, checkout the [guide](http://vuejs-templates.github.io/webpack/) and [docs for vue-loader](http://vuejs.github.io/vue-loader).
