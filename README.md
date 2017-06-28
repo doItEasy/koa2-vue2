@@ -1,13 +1,13 @@
 # koa2-vue2
 
-> koa2 & vue2 project，一个vue2和koa2结合的web工程例子，提供跨域的RESTful API和前端静态资源处理，全面替代spring mvc这样的java web
+> koa2 & vue2 project，一个vue2和koa2结合的nodejs web工程模板，提供跨域的RESTful API和前端静态资源处理，前后端分离开发，开发过程热更新， 全面替代spring mvc这样的java web工程
 
-clent端
+> clent端
 - Vue2
 - Vue-Router
 - vuex
 - axios
-server端
+> server端
 - koa2
 - urllib
 - koa-router
@@ -26,9 +26,7 @@ server端
 * 服务端代码热更新使用nodemon
 * 使用cross-env解决跨平台设置NODE_ENV的问题
 * pm2.json设置了生产环境产用的pm2做部署启动的脚本
-
-
-客户端的界面参考https://github.com/walleeeee/daily-zhihu
+* 客户端的界面参考https://github.com/walleeeee/daily-zhihu
 
 
 ## Build Setup
