@@ -1,57 +1,59 @@
-const
-    Koa = require('koa'),
-    koaRouter = require('koa-router')(),
-    json = require('koa-json'),
-    logger = require('koa-logger'),
-    router = require('./router.js'),
-    jwt = require('koa-jwt'),
-    path =require('path'),
-    serve = require('koa-static'),
-    historyApiFallback = require('koa2-history-api-fallback');
+import Koa from 'koa'
+import http from 'http'
+import convert from 'koa-convert'
+import logger from 'koa-logger'
+import cors from 'koa-cors'
+import bodyParser from 'koa-bodyparser' //请求体JSON解析
+import onerror from 'koa-onerror' //错误处理
+import resource from 'koa-static' //静态资源托管
+import json from 'koa-json'
+import historyApiFallback from 'koa2-history-api-fallback'
+import path from 'path'
+
+
+import routes from './router.js'
+import config from './config/config';
+
 
 const app = new Koa();
 
-app.use(require('koa-bodyparser')());
+onerror(app)
+
+app.use(async (ctx, next) => {
+    const start = new Date()
+    await next()
+    const ms = new Date() - start
+    console.log(`${ctx.method} ${ctx.url} - ${ms}ms`)
+})
+app.use(convert(logger()));
+app.use(bodyParser());
 app.use(json());
-app.use(logger());
-
-app.use(async function(ctx, next){
-  let start = new Date;
-  await next();
-  let ms = new Date - start;
-  console.log('%s %s - %s', ctx.method, ctx.url, ms);
-});
-
-app.use(async function(ctx, next){  //  如果JWT验证失败，返回验证失败信息
-  try {
-    await next();
-  } catch (err) {
-    if (401 == err.status) {
-      ctx.status = 401;
-      ctx.body = {
-        success: false,
-        token: null,
-        info: 'Protected resource, use Authorization header to get access'
-      };
-    } else {
-      throw err;
-    }
-  }
-});
-
-app.on('error', function(err, ctx){
-  console.log('server error', err);
-});
+app.use(resource(path.resolve('dist')));// 将webpack打包好的项目目录作为Koa静态文件服务的目录
+app.use(cors());
 
 
-koaRouter.use(router.routes());
-
-app.use(koaRouter.routes()); // 将路由规则挂载到Koa上。
+// routes
+app.use(routes.routes(), routes.allowedMethods());
 app.use(historyApiFallback());
-app.use(serve(path.resolve('dist'))); // 将webpack打包好的项目目录作为Koa静态文件服务的目录
+app.on('error', (error, ctx) => {
+    console.log('服务端错误' + JSON.stringify(ctx.onerror))
+    console.log('server error:' + error)
+})
 
-app.listen(8888,() => {
-  console.log('KoaServer is listening on 8888');
-});
+// app.listen(config.port,() => {
+//     console.log('KoaServer is listening on 8888');
+// });
 
-module.exports = app;
+
+http.createServer(app.callback()).listen(config.port).on('listening', function () {
+    console.log('listening port:' + config.port)
+})
+
+export default app;
+
+
+
+
+
+
+

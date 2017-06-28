@@ -10,7 +10,7 @@ api['get']  = async function (ctx){
 
     var urlOption = url.parse(ctx.req.url);
     var uri = remoteUrl + urlOption.pathname;
-    console.log(urlOption);
+    console.log(urlOption,"$$$$$$$$$$$$$$$$");
 
     if(/^\/api/.test(urlOption.pathname)){
         var result=await urllib.request(uri,{
